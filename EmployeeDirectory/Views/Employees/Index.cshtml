@@ -1,0 +1,94 @@
+﻿@*@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<EmployeeDirectory.Models.EmployeeModel>*@
+
+@model EmployeeDirectory.ViewModel.EmployeesListViewModel
+        
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="well">
+    <h3>Employees</h3>
+    @if ((bool)Session["IsAdmin"])
+    {
+        <a href="@Url.Action("New", "Employees")" class="btn btn-info btn-xs">Add Employee</a>
+    }
+</div>
+<div class="well">
+    @using(Html.BeginForm("Index", "Employees", FormMethod.Get))
+    {
+        <b>Search: </b>
+        @Html.TextBox("Search")
+        <input class="btn btn-primary  btn-sm" type="submit" name="submit" value="Search"/>        
+        <input class="btn btn-primary  btn-sm" type="button" value="Reset" onclick="location.href='@Url.Action("Index", "Employees")'" @((Model.Searching) ? "disabled" : "")/>
+    }
+</div>
+
+@if (!Model.Employees.Any())
+{
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oh snap! We don't have any Employees yet.</strong>
+        <a href="@Url.Action("Index", "Employees")" class="alert-link">Reset</a>                                     
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Employee Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Job Title</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td>@Html.ActionLink(Convert.ToString(employee.EmployeeId), "Details", "Employees", new { EmpId = employee.EmployeeId }, null)</td>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.JobTitle</td>
+                    <td>@employee.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    if (Model.Searching)
+    {
+        using (Html.BeginForm("Index", "Employees"))
+        {
+            <div class="well well-sm" style="background-color: #f7faff">
+                @*Page: @Html.DisplayFor(m => m.CurrentPage) of @Html.DisplayFor(m => m.TotalNumberOfPages)*@ 
+                <br />
+                Total Number of Employees: @Html.DisplayFor(m => m.TotalNumberOfEmployees)
+                @Html.HiddenFor(m => m.TotalNumberOfEmployees)
+                @Html.HiddenFor(m => m.CurrentPage)
+                @Html.HiddenFor(m => m.TotalNumberOfPages)
+            </div>
+
+            if ((bool)(Model.CurrentPage > 2))
+            {
+                <input class="btn btn-primary" name="PageNumber" type="submit" id="process" value=@(1) />
+                <span>...</span>
+            }
+            <input class="btn btn-primary" name="PageNumber" type="submit" id="process" value=@(Model.CurrentPage-1) @((Model.CurrentPage == 1) ? "disabled" : "")/>
+
+            <input class="btn btn-primary" name="PageNumber" type="submit" id="process" value=@(Model.CurrentPage) disabled />
+
+            <input class="btn btn-primary" name="PageNumber" type="submit" id="submit" value=@(Model.CurrentPage+1) @((Model.TotalNumberOfPages == Model.CurrentPage) ? "disabled" : "")/>
+
+            if ((bool)(Math.Abs(Model.CurrentPage - Model.TotalNumberOfPages) > 2))
+            {
+                <span>...</span>
+                <input class="btn btn-primary" name="PageNumber" type="submit" id="process" value=@(Model.TotalNumberOfPages) />
+            }
+            <br/><span class="label label-info">@Html.DisplayFor(m => m.TotalNumberOfPages) Pages</span>
+
+    }
+}
+}

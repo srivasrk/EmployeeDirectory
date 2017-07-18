@@ -1,0 +1,48 @@
+﻿@model EmployeeDirectory.Models.EmployeeModel
+@{  
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="well well-sm">
+    <h2>Details</h2>
+</div>
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.FirstName</h3>
+    </div>
+    <div class="panel-body">
+        @Model.FirstName  @Model.LastName
+        <br/> @Model.JobTitle
+        <br/> @Model.Email
+        <br/> @Model.Location
+
+        @if ((bool)Session["IsAdmin"])
+        {
+            using (Html.BeginForm("Edit", "Employees", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.EmployeeId)
+                @Html.HiddenFor(m => m.FirstName)
+                @Html.HiddenFor(m => m.LastName)
+                @Html.HiddenFor(m => m.JobTitle)
+                @Html.HiddenFor(m => m.Email)
+                @Html.HiddenFor(m => m.Location)
+                @Html.HiddenFor(m => m.IsAdmin)
+                <input type="submit" class="btn btn-info btn-sm" value="Edit" />
+
+            }
+        }
+    </div>
+</div>
+
+    @using (Html.BeginForm("Delete", "Employees", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.EmployeeId)
+
+        if ((bool)Session["IsAdmin"])
+        {
+            <input type="submit" class="btn btn-danger btn-sm" value="Delete" />
+        }
+        <a href="@Url.Action("Index", "Employees")" class="btn btn-info btn-sm">Back to List</a>
+
+    }
