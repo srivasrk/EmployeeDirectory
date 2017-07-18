@@ -123,31 +123,6 @@ namespace EmployeeDirectory.Controllers
             TempData["SuccessMessage"] = "Password updated successfully";
             return View("ManagePassword", EmployeeCredentials);
         }
-
-        //private IEnumerable<EmployeeModel> GetEmployees()
-        //{
-        //    return new List<EmployeeModel>
-        //    {
-        //        new EmployeeModel
-        //        {
-        //            EmployeeId = 1,
-        //            FirstName = "Rahul",
-        //            LastName = "Srivastava",
-        //            JobTitle = "Software Developer",
-        //            Location = "Cincinnati",
-        //            Email = "rahul@developer.com"
-        //        },
-
-        //        new EmployeeModel
-        //        {
-        //            EmployeeId = 2,
-        //            FirstName = "Manjula",
-        //            LastName = "Tiwari",
-        //            JobTitle = "Senior Software Engineer",
-        //            Location = "New Delhi",
-        //            Email = "manjula@developer.com"
-        //        }
-        //    };
-        //}
+        
     }
 }
